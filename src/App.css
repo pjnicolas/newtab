@@ -1,38 +1,99 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-color: #272727;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app {
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.main {
+  flex: 1;
+  margin: 0 auto;
+  width: 100vw;
+  max-width: 800px;
+  padding: 50px 0 100px 0;
+}
+
+.editor {
+  color: #eee;
+  border: none;
+  width: 100%;
+  outline: none;
+  resize: none;
+  height: 100%;
+  background-color: #272727;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  line-height: 1.75;
+  padding: 16px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #272727;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #202020;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #222222;
+  cursor: pointer;
+}
+
+.tabs {
   color: white;
+
+  display: flex;
+  flex-direction: row;
 }
 
-.App-link {
-  color: #61dafb;
+.tabs > button {
+  flex: 1;
+  /* border: 1px solid grey; */
+  border: none;
+  text-align: center;
+  padding: 8px;
+  /* font-family: 'Courier New', Courier, monospace; */
+  background-color: transparent;
+  color: #eee;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.tabs > button:hover {
+  background-color: #fff1;
+  cursor: pointer;
+  transition: 200ms;
+}
+
+.tab-selected {
+  font-weight: 700;
+}
+
+.style {
+  align-self: flex-end;
+}
+
+.style > button {
+  border: none;
+  padding: 4px;
+  background-color: transparent;
+  color: #eee;
+  padding: 16px;
+}
+
+.style > button:hover {
+  cursor: pointer;
 }
