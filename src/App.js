@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css';
 
 const LOCAL_STORAGE_KEY = 'config'
@@ -33,10 +33,31 @@ const loadConfig = () => {
   }
 }
 
+const findLineOfPosition = (data, position) => {
+  let acc = 0
+  for (let i in data) {
+    acc += data[i].length + 1
+    if (acc > position) {
+      return Number(i)
+    }
+  }
+}
+
 const App = () => {
   const [styles, setStyles] = useState(null)
   const [currentTab, setCurrentTab] = useState(null)
   const [tabs, setTabs] = useState(null)
+  const textAreaRef = useRef()
+  const [selectionStart, setSelectionStart] = useState(0)
+  const [selectionEnd, setSelectionEnd] = useState(0)
+
+
+  useEffect(() => {
+    if (textAreaRef.current && textAreaRef.current === document.activeElement) {
+      textAreaRef.current.selectionStart = selectionStart
+      textAreaRef.current.selectionEnd = selectionEnd
+    }
+  })
 
   useEffect(() => {
     const loadedConfig = loadConfig()
@@ -106,6 +127,7 @@ const App = () => {
         </div>
 
         <textarea
+          ref={textAreaRef}
           className="editor"
           value={tabs[currentTab].data}
           style={{
@@ -117,11 +139,67 @@ const App = () => {
             }, {})
           }}
           onChange={(event) => {
+            setSelectionStart(textAreaRef.current.selectionStart)
+            setSelectionEnd(textAreaRef.current.selectionEnd)
             setTabs((t) => {
               const copy = [...t]
               copy[currentTab].data = event.target.value
               return copy
             })
+          }}
+          onSelect={() => {
+            setSelectionStart(textAreaRef.current.selectionStart)
+            setSelectionEnd(textAreaRef.current.selectionEnd)
+          }}
+          onKeyDown={(event) => {
+            const { altKey, code } = event;
+
+            const moveLine = (n) => {
+              if (n !== -1 && n !== 1) {
+                return
+              }
+
+              const position = textAreaRef.current.selectionStart
+              const data = tabs[currentTab].data.split('\n')
+              const line = findLineOfPosition(data, position)
+
+              if ((line + n) >= 0 && (line + n) < data.length) {
+                const arrayPrev = data.slice(0, line)
+                const arrayLine = data.slice(line, line + 1)
+                const arrayPost = data.slice(line + 1, data.length)
+
+                let newData = null
+                let tmpLength = 0
+                if (n < 0) {
+                  const tmp = arrayPrev.pop()
+                  tmpLength = tmp.length
+                  const newArray = [...arrayPrev, ...arrayLine, tmp, ...arrayPost]
+                  newData = newArray.join('\n')
+                } else if (n > 0) {
+                  const tmp = arrayPost.shift()
+                  tmpLength = tmp.length
+                  const newArray = [...arrayPrev, tmp, ...arrayLine, ...arrayPost]
+                  newData = newArray.join('\n')
+                }
+
+                setTabs((t) => {
+                  const copy = [...t]
+                  copy[currentTab].data = newData
+                  return copy
+                })
+
+                setSelectionStart(position + (tmpLength + 1) * n)
+                setSelectionEnd(position + (tmpLength + 1) * n)
+              }
+            }
+
+            if (altKey) {
+              if (code === 'ArrowUp') {
+                moveLine(-1)
+              } else if (code === 'ArrowDown') {
+                moveLine(+1)
+              }
+            }
           }}
         />
       </div>
