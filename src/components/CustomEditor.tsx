@@ -1,6 +1,6 @@
-import Editor, { useMonaco } from '@monaco-editor/react'
 import { useEffect, useState } from 'react'
-import { useDataStore } from '../lib/store'
+import Editor, { useMonaco } from '@monaco-editor/react'
+import { useDataStore } from '@/lib/store'
 
 const CustomEditor = () => {
   const monaco = useMonaco()
@@ -16,6 +16,7 @@ const CustomEditor = () => {
         inherit: true,
         rules: [],
         colors: {
+          'editor.background': '#1A1A1A',
           'editorLineNumber.foreground': '#85858540',
           'editorLineNumber.activeForeground': '#C6C6C680',
         },

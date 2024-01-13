@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { IData } from './types'
-import { DEFAULT_DATA } from './defaults'
+import { IData } from '@/lib/types'
+import { DEFAULT_DATA } from '@/lib/defaults'
 
 interface IDataState extends IData {
   setText: (id: string, newText: string) => void
